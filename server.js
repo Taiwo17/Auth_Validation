@@ -6,8 +6,11 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport')
 const morgan = require('morgan')
+const dotenv = require('dotenv')
 const server = express()
 const port = process.env.PORT || 3000;
+
+dotenv.config()
 
 // Passport config
 require('./config/passport')
@@ -15,21 +18,16 @@ require('./config/passport')
 // EJS MIDDLEWARE
 server.use(expressLayouts);
 
-let options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true
-};
+const connectDB = async () => {
+  try {
+    const db = await mongoose.connect(process.env.DATABASE_URL)
+    console.log('Database Connected!!!')
+  } catch (e) {
+    console.log(e.stack)
+  }
+}
 
-mongoose.connect('mongodb://localhost/auth_validation', options);
-
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {       
-  console.log("Connected to Database")
-});
-
-mongoose.Promise = global.Promise;
+connectDB()
 
 // Express Middleware
 server.set('views', path.join(__dirname, 'views'))
@@ -70,5 +68,13 @@ const userRoute = require('./src/route/user.route')
 
 server.use('/', indexRoute);
 server.use('/users', userRoute);
+
+server.get('/health', (req,res) => {
+  return res.status(200).json({
+    status: "Ok",
+    message: "Service is healthy",
+    timestamp: new Date().toISOString(),
+  })
+})
 
 server.listen(port, console.log(`The server is running on port ${port}`))
