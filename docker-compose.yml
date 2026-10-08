@@ -1,0 +1,53 @@
+name: auth-validation
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: '10m'
+    max-file: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${DOCKER_IMAGE_NAME}
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    environment:
+      DATABASE: mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@taiwo-shobo.bxf4o.mongodb.net/${MONGODB_DATABASE}?appName=taiwo-shobo
+    # depends_on:
+    #   db:
+    #     condition: service_healthy -
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    logging: *logging
+
+  # AM NOT USING LOCAL DATABASE, AM USING MONGO ATLAS
+#   db:
+#     image: mongo:8
+#     restart: unless-stopped
+#     environment:
+#       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
+#       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+#       MONGO_INITDB_DATABASE: ${MONGODB_DATABASE}
+#     volumes:
+#       - app_mongodb_data:/data/db
+#     healthcheck:
+#       test:
+#         [
+#           'CMD-SHELL',
+#           'mongosh --quiet --username "$${MONGO_INITDB_ROOT_USERNAME}" --password "$${MONGO_INITDB_ROOT_PASSWORD}" --authenticationDatabase admin --eval "db.adminCommand(''ping'')"',
+#         ]
+#       interval: 5s
+#       timeout: 5s
+#       retries: 10
+#       start_period: 20s
+#     logging: *logging
+
+# volumes:
+#   app_mongodb_data:
