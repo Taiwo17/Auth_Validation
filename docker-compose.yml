@@ -22,12 +22,9 @@ services:
     # depends_on:
     #   db:
     #     condition: service_healthy -
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
     logging: *logging
 
-  # AM NOT USING LOCAL DATABASE, AM USING MONGO ATLAS
+# AM NOT USING LOCAL DATABASE, AM USING MONGO ATLAS
 #   db:
 #     image: mongo:8
 #     restart: unless-stopped

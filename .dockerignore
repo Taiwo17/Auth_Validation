@@ -9,3 +9,12 @@ Dockerfile
 coverage
 dist
 README.md
+
+
+node_modules
+.git
+.env
+.env.*
+!.env.example
+npm-debug.log*
+.DS_Store
