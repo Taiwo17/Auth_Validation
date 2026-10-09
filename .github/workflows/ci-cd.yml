@@ -54,7 +54,9 @@ jobs:
                   context: .
                   push: true
                   load: true
-                  tags: auth-validation:${{ github.sha }}
+                  tags: |
+                      ${{ secrets.DOCKERHUB_USERNAME }}/auth-validation:${{ github.sha }}
+                      ${{ secrets.DOCKERHUB_USERNAME }}/auth-validation:latest
                   cache-from: type=gha
                   cache-to: type=gha,mode=max
 
