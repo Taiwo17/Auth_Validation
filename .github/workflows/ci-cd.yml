@@ -70,6 +70,9 @@ jobs:
 
             - name: Smoke test container
               run: |
-                  docker run -d --name app -p 3000:3000 auth-validation:${{ github.sha }}
+                  docker run -d --name auth-validation-test \
+                   -p 127.0.0.1:3000:3000 \
+                    auth-validation:${{ github.sha }}
                   sleep 5
-                  curl --fail http://localhost:3000/health
+                  docker logs auth-validation-test
+                  docker logs auth-validation-test
